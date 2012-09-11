@@ -3,7 +3,7 @@ PtitBigorneau - www.ptitbigorneau.fr
 
 PB-CmdBySSH permet d'envoyer des commandes par ssh a un serveur dédié
 
-Dépandences :
+Dépendances :
 
 WXPython 2.8
 -----------
