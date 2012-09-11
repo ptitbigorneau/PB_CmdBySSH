@@ -1,0 +1,1 @@
+python setuppy2exe.py py2exe

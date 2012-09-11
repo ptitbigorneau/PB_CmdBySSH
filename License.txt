@@ -1,0 +1,20 @@
+CONTRAT DE LICENCE D'UTILISATION ET AVERTISSEMENT
+
+PB-CmdBySSH (beta3)
+
+Le logiciel PB-CmdBySSH (beta3) est réservé aux utilisateur avertis !
+
+Le logiciel PB-CmdBySSH (beta3) est fourni en l'état. L'utilisateur utilise PB-CmdBySSH (beta3) à ses risques
+et périls, sans garantie d'aucune sorte de la part de l'auteur. L'auteur n'a aucune obligation
+de corriger les bogues ou autres déficiences quels qu'ils soient du logiciel PB-CmdBySSH (beta3).
+
+L'auteur n'est responsable d'aucun dommage subi par l'utilisateur pouvant résulter de
+l'utilisation ou de la distribution du logiciel PB-CmdBySSH (beta3).
+
+De la même façon, l'auteur n'est en aucun cas responsable d'une quelconque perte de
+revenus ou de profit, ou de données, ou de tous dommages directs ou indirects, susceptibles
+de survenir du fait de l'utilisation du logiciel ou pour la raison que celui-ci serait inopérant,
+quand bien même l'auteur aurait été averti de la possibilité de tels dommages.
+
+L'utilisation du logiciel PB-CmdBySSH (beta3) vaut acceptation par l'utilisateur des termes du contrat
+ci-dessus.
