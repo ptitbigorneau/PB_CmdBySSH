@@ -1,23 +1,19 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*- 
+﻿#!/usr/bin/python
+# -*- coding: utf_8 -*- 
 
 __author__  = 'PtitBigorneau'
 __version__ = 'beta3'
 
 import wx
 import os, sys, ConfigParser, time
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-
-    import paramiko
+import paramiko
 from contextlib import contextmanager
 
-def fexist(File):
+def fexist(fichier):
     
     try:
     
-        file(File)
+        file(fichier)
      
         return True
    
@@ -87,11 +83,11 @@ def cara(test):
   
         return False
 
-def mesError(Error):
+def meserreur(erreur):
 
-    texte =" %s invalid value"%(Error)
+    texte =u" %s valeur non valide"%(erreur)
 
-    dlg = wx.MessageDialog(None, texte, 'Error !', style = wx.OK | wx.ICON_ERROR)
+    dlg = wx.MessageDialog(None, texte, 'Erreur !', style = wx.OK | wx.ICON_ERROR)
     retour = dlg.ShowModal()
     dlg.Destroy() 
 
@@ -101,7 +97,7 @@ class MyFrame2(wx.Frame):
 
     def __init__(self, titre):    
          
-        wx.Frame.__init__(self, None, -1, title = titre, size=(650,680))
+        wx.Frame.__init__(self, None, -1, title = titre, size=(650,700))
         
         self.InitUI()
         self.Centre()
@@ -171,21 +167,21 @@ class MyFrame2(wx.Frame):
                 ccmd2 = cfg.get(section[x],"cmd2")
      
 
-        menuFile = wx.Menu(style = wx.MENU_TEAROFF) 
-        menuFile.Append(101, "&New task\tCtrl+N", "New task")
-        menuFile.Append(104, "&Save\tCtrl+S", "Save task")
-        menuFile.Append(102, "&Edit\tCtrl+E", "Edit task")
-        menuFile.Append(103, "&Delete\tCtrl+D", "Delete task")
+        menuFichier = wx.Menu(style = wx.MENU_TEAROFF) 
+        menuFichier.Append(101, u"&Nouvelle tâche\tCtrl+N", u"Nouvelle tâche")
+        menuFichier.Append(104, u"&Enregistrer\tCtrl+R", u"Enregistrer une tâche")
+        menuFichier.Append(102, u"&Modifier\tCtrl+M", u"Modifier une tâche")
+        menuFichier.Append(103, u"&Effacer\tCtrl+E", u"Effacer une tâche")
        
 
-        menuFile.AppendSeparator() 
-        menuFile.Append(105, "&Quit\tCtrl+Q", "Quit PB-CmdBySSH Configuration") 
+        menuFichier.AppendSeparator() 
+        menuFichier.Append(105, u"&Quitter\tCtrl+Q", u"Quitter PB-CmdBySSH Configation") 
 
         menuHelp = wx.Menu()
-        menuHelp.Append(106, "About","About PB-CmdBySSH")
+        menuHelp.Append(106, u"A propos",u"A propos de PB-CmdBySSH")
 
         menuBarre = wx.MenuBar() 
-        menuBarre.Append(menuFile, "&File")
+        menuBarre.Append(menuFichier, u"&Fichier")
         menuBarre.Append(menuHelp, "?")
 
         self.barre = wx.StatusBar(self, -1) 
@@ -198,13 +194,13 @@ class MyFrame2(wx.Frame):
 
         toolbar = self.CreateToolBar()
         toolbar.AddSeparator()
-        toolbar.AddLabelTool(101, 'New', wx.Bitmap('./new.bmp'),shortHelp='New', longHelp="New task")
-        toolbar.AddLabelTool(104, '', wx.Bitmap('./enr.bmp'),shortHelp='Save', longHelp="Save task")
-        toolbar.AddLabelTool(102, '', wx.Bitmap('./modif.bmp'),shortHelp='Edit', longHelp="Edit task")
-        toolbar.AddLabelTool(103, '', wx.Bitmap('./effa.bmp'),shortHelp='Delete', longHelp="Delete task")
+        toolbar.AddLabelTool(101, 'Nouveau', wx.Bitmap('./new.bmp'),shortHelp='Nouvelle', longHelp=u"Nouvelle tâche")
+        toolbar.AddLabelTool(104, '', wx.Bitmap('./enr.bmp'),shortHelp='Enregister', longHelp=u"Enregistrer une tâche")
+        toolbar.AddLabelTool(102, '', wx.Bitmap('./modif.bmp'),shortHelp='Modifier', longHelp=u"Modifier une tâche")
+        toolbar.AddLabelTool(103, '', wx.Bitmap('./effa.bmp'),shortHelp='Effacer', longHelp=u"Effacer une tâche")
         
         toolbar.AddSeparator()
-        toolbar.AddLabelTool(105, '', wx.Bitmap('./exit.bmp'),shortHelp='Quit', longHelp="Quit PB-CmdBySSH Configuration")
+        toolbar.AddLabelTool(105, '', wx.Bitmap('./exit.bmp'),shortHelp='Quitter', longHelp="Quitter PB-CmdBySSH Configuration")
         toolbar.AddSeparator()
         toolbar.Realize()
 
@@ -236,13 +232,12 @@ class MyFrame2(wx.Frame):
             flag=wx.TOP|wx.EXPAND, border=10)
         self.tconfig.SetFont(fontc)
         
-        button2 = wx.Button(panel,1, label="Edit")
+        button2 = wx.Button(panel,1, label="Modifier")
         sizer.Add(button2, pos=(2, 4), flag=wx.TOP|wx.RIGHT, border=8)        
 
         self.host = wx.StaticText(panel, label=" Host :                      ")
         sizer.Add(self.host, pos=(3, 0), flag=wx.LEFT|wx.TOP, border=10)
         self.host.SetFont(font)
-
 
         self.thost = wx.TextCtrl(panel, value=chost)
         sizer.Add(self.thost, pos=(3, 1), span=(1, 1), flag=wx.TOP|wx.EXPAND, border=10)
@@ -251,23 +246,20 @@ class MyFrame2(wx.Frame):
         sizer.Add(self.port, pos=(3, 2), flag=wx.LEFT|wx.TOP, border=10)
         self.port.SetFont(font)
 
-
         self.tport = wx.TextCtrl(panel, value=cport)
         sizer.Add(self.tport, pos=(3, 3), span=(1, 1), flag=wx.TOP|wx.EXPAND, border=10)
 
         ident = wx.StaticText(panel, label=" Login :                     ")
         sizer.Add(ident, pos=(4, 0), flag=wx.LEFT|wx.TOP, border=10)
         ident.SetFont(font)
-
         
         self.tident = wx.TextCtrl(panel, value=cuser)
         sizer.Add(self.tident, pos=(4, 1), span=(1, 3), flag=wx.TOP|wx.EXPAND, 
             border=5)
         
-        pwd = wx.StaticText(panel, label=" Password :        ")
+        pwd = wx.StaticText(panel, label=" Mot de passe :        ")
         sizer.Add(pwd, pos=(5, 0), flag=wx.LEFT|wx.TOP, border=10)
         pwd.SetFont(font)
-
         
         self.tpwd = wx.TextCtrl(panel, value=cpwd)
         sizer.Add(self.tpwd, pos=(5, 1), span=(1, 3), flag=wx.TOP|wx.EXPAND, 
@@ -277,7 +269,7 @@ class MyFrame2(wx.Frame):
         sizer.Add(line, pos=(7, 0), span=(1, 5), 
             flag=wx.EXPAND|wx.BOTTOM, border=10)
         
-        namecmd1 = wx.StaticText(panel, label=" Button 1 :                ")
+        namecmd1 = wx.StaticText(panel, label=" Bouton 1 :                ")
         sizer.Add(namecmd1, pos=(8, 0), flag=wx.LEFT|wx.TOP, border=10) 
         namecmd1.SetFont(font)
         
@@ -285,7 +277,7 @@ class MyFrame2(wx.Frame):
         sizer.Add(self.tnamecmd1, pos=(8, 1), span=(1, 3), flag=wx.TOP|wx.EXPAND, 
             border=5)
 
-        cmd1 = wx.StaticText(panel, label=" Command :             ")
+        cmd1 = wx.StaticText(panel, label=" Commande :             ")
         sizer.Add(cmd1, pos=(10, 0), flag=wx.LEFT|wx.TOP, border=10)
         cmd1.SetFont(font)
 
@@ -297,7 +289,7 @@ class MyFrame2(wx.Frame):
         sizer.Add(line, pos=(12, 0), span=(1, 5), 
             flag=wx.EXPAND|wx.BOTTOM, border=10)
 
-        namecmd2 = wx.StaticText(panel, label=" Button 2 :                ")
+        namecmd2 = wx.StaticText(panel, label=" Bouton 2 :                ")
         sizer.Add(namecmd2, pos=(13, 0), flag=wx.LEFT|wx.TOP, border=10)
         namecmd2.SetFont(font)
 
@@ -305,7 +297,7 @@ class MyFrame2(wx.Frame):
         sizer.Add(self.tnamecmd2, pos=(13, 1), span=(1, 3), flag=wx.TOP|wx.EXPAND, 
             border=5)
  
-        cmd2 = wx.StaticText(panel, label=" Command :             ")
+        cmd2 = wx.StaticText(panel, label=" Commande :             ")
         sizer.Add(cmd2, pos=(15, 0), flag=wx.LEFT|wx.TOP, border=10)
         cmd2.SetFont(font)
         
@@ -317,10 +309,10 @@ class MyFrame2(wx.Frame):
         sizer.Add(line, pos=(17, 0), span=(1, 5), 
             flag=wx.EXPAND|wx.BOTTOM, border=10)
 
-        button3 = wx.Button(panel,2, label="Save")
+        button3 = wx.Button(panel,2, label="Enregistrer")
         sizer.Add(button3, pos=(18, 3), flag=wx.TOP|wx.RIGHT, border=5)
 
-        button4 = wx.Button(panel,3, label="Delete")
+        button4 = wx.Button(panel,3, label="Effacer")
         sizer.Add(button4, pos=(18, 4), flag=wx.TOP|wx.RIGHT, border=5)
 
         sizer.AddGrowableCol(1)
@@ -382,7 +374,7 @@ class MyFrame2(wx.Frame):
 
         if testcfg(self.file) == False:
 
-            dlg = wx.MessageDialog(self, "Error File configuration !", "Error !" , style = wx.OK | wx.ICON_ERROR)
+            dlg = wx.MessageDialog(self, "Erreur Fichier configuration !", "Erreur !" , style = wx.OK | wx.ICON_ERROR)
             retour = dlg.ShowModal()
             dlg.Destroy() 
 
@@ -390,7 +382,7 @@ class MyFrame2(wx.Frame):
 
         if self.testvide == 'vide':
 
-            texte = "Not Task has save !"
+            texte = u"Pas de Tâche à enregistrer !"
         
             dlg = wx.MessageDialog(self, texte, style = wx.OK)
             retour = dlg.ShowModal()
@@ -411,21 +403,21 @@ class MyFrame2(wx.Frame):
        
         if cara(chost) == False:
 
-            mesError('HOST')
+            meserreur('HOST')
             self.thost.SetValue('')
             evt.Skip()
             return
 
         if cara(cport) == False:
 
-            mesError('PORT')
+            meserreur('PORT')
             self.tport.SetValue('')
             evt.Skip()
             return
 
         if not cport.isdigit():
 
-            mesError('PORT')
+            meserreur('PORT')
             self.tport.SetValue('')
             evt.Skip()
             return
@@ -434,42 +426,42 @@ class MyFrame2(wx.Frame):
 
             self.tident.SetValue('')
             evt.Skip()
-            mesError('LOGIN')
+            meserreur('LOGIN')
             return        
 
         if cara(cpwd) == False:
 
             self.tpwd.SetValue('')
             evt.Skip()
-            mesError('Password')
+            meserreur('MOT DE PASSE')
             return        
 
         if cara(lcmd1) == False:
 
             self.tnamecmd1.SetValue('')
             evt.Skip()
-            mesError('Command Name 1')
+            meserreur('NOM COMMANDE 1')
             return        
 
         if cara(lcmd2) == False:
 
             self.tnamecmd2.SetValue('')
             evt.Skip()            
-            mesError('Command Name 2')
+            meserreur('NOM COMMANDE 2')
             return        
         
         if cara(cmd1) == False:
 
             self.tcmd1.SetValue('')
             evt.Skip()            
-            mesError('Command 1')
+            meserreur('COMMANDE 1')
             return
 
         if cara(cmd2) == False:
 
             self.tcmd2.SetValue('')
             evt.Skip()
-            mesError('Command 2')
+            meserreur('COMMANDE 2')
             return
 
         cfg = ConfigParser.ConfigParser()
@@ -486,7 +478,7 @@ class MyFrame2(wx.Frame):
 
         cfg.write(open(self.file,'w'))
 
-        texte = "Task successfully registered"
+        texte = u"Tâche enregistrée avec succés"
 
         dlg = wx.MessageDialog(self, texte, style = wx.OK)
         retour = dlg.ShowModal()
@@ -505,7 +497,7 @@ class MyFrame2(wx.Frame):
         
         if self.testvide == 'vide':
 
-            texte = "Not Task has Delete !"
+            texte = u"Pas de Tâche à effacer !"
         
             dlg = wx.MessageDialog(self, texte, style = wx.OK)
             retour = dlg.ShowModal()
@@ -522,7 +514,7 @@ class MyFrame2(wx.Frame):
         cfg.remove_section(csection)
         cfg.write(open(self.file,'w'))
         
-        texte = "Task successfully deleted"
+        texte = u"Tâche éffacée avec succés"
         
         dlg = wx.MessageDialog(self, texte, style = wx.OK)
         retour = dlg.ShowModal()
@@ -539,15 +531,15 @@ class MyFrame2(wx.Frame):
 
     def Clicknew(self, evt):
         
-        addTask = wx.TextEntryDialog(self, 'Task has execute : ', 'New Task')
-        addTask.ShowModal()
-        ccname = addTask.GetValue()
+        addtache = wx.TextEntryDialog(self, u'Tâche à exécutér : ', u'Nouvelle Tâche')
+        addtache.ShowModal()
+        ccname = addtache.GetValue()
                
         if cara(ccname) == False:
         
-            texte = "invalid value !"
+            texte = u"Valeur Non Valide !"
         
-            dlg = wx.MessageDialog(self, texte, "Error !", style = wx.OK | wx.ICON_ERROR)
+            dlg = wx.MessageDialog(self, texte, "Erreur !", style = wx.OK | wx.ICON_ERROR)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             
@@ -600,7 +592,7 @@ class MyFrame2(wx.Frame):
 
         cfg.write(open(self.file,'w'))
 
-        texte = "New Task added successfully"
+        texte = u"Nouvelle Tâche ajoutée avec succés"
         
         dlg = wx.MessageDialog(self, texte, style = wx.OK)
         retour = dlg.ShowModal()
@@ -623,15 +615,15 @@ class MyFrame2(wx.Frame):
 
             return               
          
-        addTask = wx.TextEntryDialog(self, 'Task has execute : ', 'Edit Task')
-        addTask.ShowModal()
-        ccname = addTask.GetValue()
+        addtache = wx.TextEntryDialog(self, u'Tâche à exécutér : ', u'Modifier Tâche')
+        addtache.ShowModal()
+        ccname = addtache.GetValue()
                
         if cara(ccname) == False:
         
-            texte = "invalid value !"
+            texte = u"Valeur Non Valide !"
         
-            dlg = wx.MessageDialog(self, texte, "Error !",style = wx.OK | wx.ICON_ERROR)
+            dlg = wx.MessageDialog(self, texte, "Erreur !",style = wx.OK | wx.ICON_ERROR)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             
@@ -655,7 +647,7 @@ class MyFrame2(wx.Frame):
 
         cfg.write(open(self.file,'w'))
 
-        texte = "Task successfully modified"
+        texte = u"Tâche modifiée avec succés"
 
         dlg = wx.MessageDialog(self, texte, style = wx.OK)
         retour = dlg.ShowModal()
@@ -688,8 +680,9 @@ class MyFrame2(wx.Frame):
     def About(self, evt):
 
         description = """
-            Envois de Commands a distance par SSH            
-           ( Python 2.7, wxPython )
+            Envois de commandes à distance par SSH            
+
+                        ( Python 2.7, wxPython )
 """
        
         info = wx.AboutDialogInfo()
@@ -698,7 +691,7 @@ class MyFrame2(wx.Frame):
         info.SetName('PB-CmdBySSh')
         info.SetVersion('beta3')
         info.SetDescription(description)
-        info.SetCopyright('(C) 2011 PtitBigorneau')
+        info.SetCopyright('(C) 2012 PtitBigorneau')
         info.SetWebSite('http://www.ptitbigorneau.fr')
              
         wx.AboutBox(info)
@@ -710,7 +703,7 @@ class Myframe(wx.Frame):
 
     def __init__(self, titre):    
 
-        wx.Frame.__init__(self, None, -1, title = titre, size=(650,680))
+        wx.Frame.__init__(self, None, -1, title = titre, size=(650,700))
         
         self.InitUI()
         self.Centre()
@@ -731,17 +724,17 @@ class Myframe(wx.Frame):
             cport = ''
             cuser = ''
             self.ctestpwd = ''
-            lcmd1 = 'Button 1'
-            lcmd2 = 'Button 2'
+            lcmd1 = 'Bouton 1'
+            lcmd2 = 'Bouton 2'
             ccmd1 = ''
             ccmd2 = ''
             if fexist(self.file) == False:
             
-                cstatus = "Not File configuration"
+                cstatus = "Fichier de configuration manquant"
             
             if testcfg(self.file) == False:
   
-                cstatus = "Error in File configuration"            
+                cstatus = "Erreur dans le fichier de configuration"            
             
             color = "red"
 
@@ -762,11 +755,11 @@ class Myframe(wx.Frame):
                 cport = ''
                 cuser = ''
                 self.ctestpwd = ''
-                lcmd1 = 'Button 1'
-                lcmd2 = 'Button 2'
+                lcmd1 = 'Bouton 1'
+                lcmd2 = 'Bouton 2'
                 ccmd1 = ''
                 ccmd2 = ''
-                cstatus = 'File configuration empty'
+                cstatus = 'Fichier configuration vide'
                 color = "red"
                 self.testvide = 'vide'
 
@@ -787,7 +780,7 @@ class Myframe(wx.Frame):
                 lcmd2 = cfg.get(section[0],"namecmd2")
                 ccmd1 = cfg.get(section[0],"cmd1")
                 ccmd2 = cfg.get(section[0],"cmd2")
-                cstatus = 'Information'
+                cstatus = u'Information'
                 cstatus2 = ''
 
                 self.pwd = cpwd
@@ -799,18 +792,18 @@ class Myframe(wx.Frame):
 
                 if testssh(chost, cport, cuser, cpwd) == False:
 
-                    self.ctestpwd = "Error"
+                    self.ctestpwd = "Erreur"
                     colorpwd = "red"
 
-        menuFile = wx.Menu(style = wx.MENU_TEAROFF) 
-        menuFile.Append(wx.ID_OPEN, "&Configuration\tCtrl+C", "Configurer CmdBySSH") 
-        menuFile.Append(wx.ID_EXIT, "&Quit\tCtrl+Q", "Quit CmdBySSH") 
+        menuFichier = wx.Menu(style = wx.MENU_TEAROFF) 
+        menuFichier.Append(wx.ID_OPEN, "&Configuration\tCtrl+C", "Configurer CmdBySSH") 
+        menuFichier.Append(wx.ID_EXIT, "&Quitter\tCtrl+Q", "Quitter CmdBySSH") 
 
         menuHelp = wx.Menu()
-        menuHelp.Append(wx.ID_ABOUT, "About","About CmdBySSH")
+        menuHelp.Append(wx.ID_ABOUT, "A propos","A propos de CmdBySSH")
 
         menuBarre = wx.MenuBar() 
-        menuBarre.Append(menuFile, "&File")
+        menuBarre.Append(menuFichier, "&Fichier")
         menuBarre.Append(menuHelp, "?")
 
         self.barre = wx.StatusBar(self, -1) 
@@ -825,7 +818,7 @@ class Myframe(wx.Frame):
         toolbar.AddSeparator()
         toolbar.AddLabelTool(wx.ID_OPEN, '', wx.Bitmap('./conf.bmp'),shortHelp='Configuration', longHelp="Configurer CmdBySSH")
         toolbar.AddSeparator()
-        toolbar.AddLabelTool(wx.ID_EXIT, '', wx.Bitmap('./exit.bmp'),shortHelp='Quit', longHelp="Quit CmdBySSH")
+        toolbar.AddLabelTool(wx.ID_EXIT, '', wx.Bitmap('./exit.bmp'),shortHelp='Quitter', longHelp="Quitter CmdBySSH")
         toolbar.AddSeparator()
         toolbar.Realize()
 
@@ -857,7 +850,7 @@ class Myframe(wx.Frame):
             flag=wx.TOP|wx.EXPAND, border=5)
         tconfig.SetFont(fontc)
 
-        cmd1 = wx.StaticText(panel, label=" Button 1 :             ")
+        cmd1 = wx.StaticText(panel, label=" Bouton 1 :             ")
         sizer.Add(cmd1, pos=(4, 0), flag=wx.TOP|wx.LEFT, border=10)
         cmd1.SetFont(font)
         
@@ -865,7 +858,7 @@ class Myframe(wx.Frame):
         sizer.Add(self.button4, pos=(4, 1), span=(1, 3), 
             flag=wx.TOP|wx.EXPAND, border=5)
 
-        cmd2 = wx.StaticText(panel, label=" Button 2 :             ")
+        cmd2 = wx.StaticText(panel, label=" Bouton 2 :             ")
         sizer.Add(cmd2, pos=(6, 0), flag=wx.TOP|wx.LEFT, border=10)
         cmd2.SetFont(font)
         
@@ -897,10 +890,9 @@ class Myframe(wx.Frame):
         self.user = wx.StaticText(panel, label=cuser)
         sizer.Add(self.user, pos=(11, 1), flag=wx.TOP|wx.LEFT, border=10)
 
-        ttestpwd = wx.StaticText(panel, label=" Connect :           ")
+        ttestpwd = wx.StaticText(panel, label=" Connexion :           ")
         sizer.Add(ttestpwd, pos=(12, 0), flag=wx.TOP|wx.LEFT, border=10)
         ttestpwd.SetFont(font)
-
         
         self.testpwd = wx.StaticText(panel, label=self.ctestpwd)
         sizer.Add(self.testpwd, pos=(12, 1), flag=wx.TOP|wx.LEFT, border=10)
@@ -908,14 +900,14 @@ class Myframe(wx.Frame):
         self.testpwd.SetForegroundColour(colorpwd)
         self.testpwd.SetFont(font)
 
-        tccmd1 = wx.StaticText(panel, label=" Command 1 :       ")
+        tccmd1 = wx.StaticText(panel, label=" Commande 1 :       ")
         sizer.Add(tccmd1, pos=(13, 0), flag=wx.TOP|wx.LEFT, border=10)
         tccmd1.SetFont(font)
         
         self.cmd1 = wx.StaticText(panel, label=ccmd1)
         sizer.Add(self.cmd1, pos=(13, 1), flag=wx.TOP|wx.LEFT, border=10)
 
-        tccmd2 = wx.StaticText(panel, label=" Command 2 :       ")
+        tccmd2 = wx.StaticText(panel, label=" Commande 2 :       ")
         sizer.Add(tccmd2, pos=(14, 0), flag=wx.TOP|wx.LEFT, border=10)
         tccmd2.SetFont(font)
         
@@ -926,7 +918,7 @@ class Myframe(wx.Frame):
         sizer.Add(line, pos=(16, 0), span=(1, 5), 
             flag=wx.EXPAND|wx.BOTTOM, border=10)
 
-        tcmdlibre = wx.StaticText(panel, label=" Free Command : ")
+        tcmdlibre = wx.StaticText(panel, label=" Commande Libre : ")
         sizer.Add(tcmdlibre, pos=(17, 0), flag=wx.TOP|wx.LEFT, border=10)
         tcmdlibre.SetFont(font)
         
@@ -934,7 +926,7 @@ class Myframe(wx.Frame):
         sizer.Add(self.cmdlibre, pos=(17, 1), span=(1, 3),flag=wx.TOP|wx.EXPAND, 
             border=5)
 
-        buttonenvoyer = wx.Button(panel,3, label="Send")
+        buttonenvoyer = wx.Button(panel,3, label="Envoyer")
         sizer.Add(buttonenvoyer, pos=(17, 4), flag=wx.TOP|wx.RIGHT, border=5) 
 
         sizer.AddGrowableCol(2)
@@ -1002,7 +994,7 @@ class Myframe(wx.Frame):
 
             if testssh(chost, cport, cuser, cpwd) == False:
 
-                self.ctestpwd = "Error"
+                self.ctestpwd = "Erreur"
                 colorpwd = "red"
 
             self.testpwd.SetForegroundColour(colorpwd)
@@ -1023,9 +1015,9 @@ class Myframe(wx.Frame):
             
             return        
 
-        if (self.testvide == 'vide') or (self.ctestpwd=="Error"):
+        if (self.testvide == 'vide') or (self.ctestpwd=="Erreur"):
             
-            dlg = wx.MessageDialog(self, "Error Login !" , style = wx.OK)
+            dlg = wx.MessageDialog(self, "Erreur connexion !" , style = wx.OK)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             
@@ -1039,7 +1031,7 @@ class Myframe(wx.Frame):
         host1 = hostport1[0]
         port1 = hostport1[1]
         
-        texte = "Command %s executed successfully"%(cmd1)
+        texte = u"Commande %s exécutée avec succés"%(cmd1)
         
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -1066,9 +1058,9 @@ class Myframe(wx.Frame):
             
             return                
 
-        if (self.testvide == 'vide') or (self.ctestpwd=="Error"):
+        if (self.testvide == 'vide') or (self.ctestpwd=="Erreur"):
             
-            dlg = wx.MessageDialog(self, "Error Login !" , style = wx.OK)
+            dlg = wx.MessageDialog(self, "Erreur connexion !" , style = wx.OK)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             
@@ -1082,7 +1074,7 @@ class Myframe(wx.Frame):
         host2 = hostport2[0]
         port2 = hostport2[1]        
 
-        texte = "Command %s executed successfully"%(cmd2)
+        texte = u"Commande %s exécutée avec succés"%(cmd2)
         
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -1109,9 +1101,9 @@ class Myframe(wx.Frame):
             
             return        
 
-        if (self.testvide == 'vide') or (self.ctestpwd=="Error"):
+        if (self.testvide == 'vide') or (self.ctestpwd=="Erreur"):
             
-            dlg = wx.MessageDialog(self, "Error Login !" , style = wx.OK)
+            dlg = wx.MessageDialog(self, "Erreur connexion !" , style = wx.OK)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             
@@ -1126,16 +1118,16 @@ class Myframe(wx.Frame):
         host1 = hostport1[0]
         port1 = hostport1[1]
 
-        texte = "Command %s executed successfully"%(cmdlibre)
+        texte = u"Commande %s exécutée avec succés"%(cmdlibre)
         
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         if cara(cmdlibre) == False:
         
-            texte = "invalid value !"
+            texte = u"Valeur Non Valide !"
         
-            dlg = wx.MessageDialog(self, texte, "Error !",style = wx.OK | wx.ICON_ERROR)
+            dlg = wx.MessageDialog(self, texte, "Erreur !",style = wx.OK | wx.ICON_ERROR)
             retour = dlg.ShowModal()
             dlg.Destroy() 
             self.cmdlibre.SetLabel('')
@@ -1165,8 +1157,9 @@ class Myframe(wx.Frame):
     def About(self, evt):
 
         description = """
-            Envois de Commands a distance par SSH            
-           ( Python 2.7, wxPython )
+            Envois de commandes à distance par SSH            
+
+                        ( Python 2.7, wxPython )
 """
        
         info = wx.AboutDialogInfo()
@@ -1175,7 +1168,7 @@ class Myframe(wx.Frame):
         info.SetName('PB-CmdBySSh')
         info.SetVersion('beta3')
         info.SetDescription(description)
-        info.SetCopyright('(C) 2011 PtitBigorneau')
+        info.SetCopyright('(C) 2012 PtitBigorneau')
         info.SetWebSite('http://www.ptitbigorneau.fr')
                
         wx.AboutBox(info)
